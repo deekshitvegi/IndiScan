@@ -1,0 +1,8 @@
+
+gradio==4.15.0
+pytesseract
+pillow
+playwright
+pandas
+beautifulsoup4
+openai
