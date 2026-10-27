@@ -28,3 +28,12 @@ def test_bounds_and_validation():
         score_product(Nutrition(sugar_g=-1))
     with pytest.raises(ValueError):
         score_product(Nutrition(), category="x")
+
+
+def test_samples_rank_sensibly():
+    from indiscan.samples import SAMPLES, score_sample
+    s = {k: score_sample(k).score for k in SAMPLES}
+    assert all(0 <= v <= 1000 for v in s.values())
+    assert s["rolled-oats"] > s["glucose-biscuit"] > s["instant-noodles"]
+    assert s["buttermilk"] > s["cola"] and s["buttermilk"] > s["fruit-drink"]
+    assert s["roasted-chana"] > s["bhujia-namkeen"]

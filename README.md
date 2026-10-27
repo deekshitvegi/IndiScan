@@ -15,6 +15,7 @@ A Yuka-style health rating for Indian packaged foods and drinks, scored **out of
 
 ```
 python -m indiscan --energy 450 --sugar 12 --sodium 400 --protein 5 -i "wheat flour, palm oil, INS 330"
+python -m indiscan --list-samples   # rank bundled generic Indian product profiles
 python app.py          # Gradio UI
 python -m pytest tests
 ```

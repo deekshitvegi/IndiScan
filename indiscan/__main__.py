@@ -3,6 +3,7 @@ import argparse
 import json
 
 from . import Nutrition, score_product
+from .samples import SAMPLES, score_sample
 
 FLAGS = {"energy_kcal": "--energy", "sugar_g": "--sugar", "saturated_fat_g": "--sat-fat",
          "trans_fat_g": "--trans-fat", "sodium_mg": "--sodium", "protein_g": "--protein",
@@ -13,6 +14,16 @@ for dest, flag in FLAGS.items():
     p.add_argument(flag, dest=dest, type=float, default=0.0)
 p.add_argument("-i", "--ingredients", default="")
 p.add_argument("-c", "--category", choices=["food", "beverage"], default="food")
+p.add_argument("--sample", choices=sorted(SAMPLES), help="score a bundled generic Indian product profile")
+p.add_argument("--list-samples", action="store_true", help="score every bundled sample")
 a = p.parse_args()
+if a.list_samples:
+    for k in sorted(SAMPLES, key=lambda k: -score_sample(k).score):
+        r = score_sample(k)
+        print(f"{r.score:4d}  {r.grade}  {k}")
+    raise SystemExit
+if a.sample:
+    print(json.dumps(score_sample(a.sample).to_dict(), indent=2))
+    raise SystemExit
 n = Nutrition(**{k: getattr(a, k) for k in FLAGS})
 print(json.dumps(score_product(n, a.ingredients, a.category).to_dict(), indent=2))
