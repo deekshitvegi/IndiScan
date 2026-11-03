@@ -11,8 +11,15 @@ FLAGS = {"energy_kcal": "--energy", "sugar_g": "--sugar", "saturated_fat_g": "--
 p = argparse.ArgumentParser(prog="indiscan", description="Rate a product out of 1000 (per 100 g / 100 ml).")
 for dest, flag in FLAGS.items():
     p.add_argument(flag, dest=dest, type=float, default=0.0)
+p.add_argument("-b", "--barcode", help="look up nutrition on Open Food Facts (overrides nutrition flags)")
 p.add_argument("-i", "--ingredients", default="")
 p.add_argument("-c", "--category", choices=["food", "beverage"], default="food")
 a = p.parse_args()
-n = Nutrition(**{k: getattr(a, k) for k in FLAGS})
+if a.barcode:
+    from .openfoodfacts import lookup
+    prod = lookup(a.barcode)
+    n, a.ingredients, a.category = prod.nutrition, prod.ingredients, prod.category
+    print(f"{prod.brand} {prod.name}".strip(), f"(missing data: {', '.join(prod.missing) or 'none'})")
+else:
+    n = Nutrition(**{k: getattr(a, k) for k in FLAGS})
 print(json.dumps(score_product(n, a.ingredients, a.category).to_dict(), indent=2))

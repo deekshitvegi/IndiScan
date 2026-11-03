@@ -16,6 +16,7 @@ A Yuka-style health rating for Indian packaged foods and drinks, scored **out of
 ```
 python -m indiscan --energy 450 --sugar 12 --sodium 400 --protein 5 -i "wheat flour, palm oil, INS 330"
 python app.py          # Gradio UI
+python -m indiscan --barcode 8901058852387   # Open Food Facts lookup
 python -m pytest tests
 ```
 
@@ -40,4 +41,4 @@ Grades: **A** ≥800 Excellent · **B** ≥600 Good · **C** ≥400 Mediocre · 
 Thresholds and the additive table (`indiscan/additives.py`) are plain data meant to be tuned.
 
 ## Roadmap
-Barcode lookup (Open Food Facts), label OCR, product database, Indian-brand price comparison.
+Label OCR, product database, Indian-brand price comparison.
